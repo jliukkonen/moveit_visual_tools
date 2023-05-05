@@ -39,12 +39,10 @@
 #include <moveit_visual_tools/imarker_end_effector.h>
 
 // C++
+#include <filesystem>
 #include <string>
 #include <utility>
 #include <vector>
-
-// Boost
-#include <boost/filesystem.hpp>
 
 static const rclcpp::Logger LOGGER = rclcpp::get_logger("imarker_end_effector");
 static rclcpp::Clock steady_clock(RCL_STEADY_TIME);
@@ -170,7 +168,7 @@ IMarkerRobotState::IMarkerRobotState(rclcpp::Node::SharedPtr node, planning_scen
 
 bool IMarkerRobotState::loadFromFile(const std::string& file_name)
 {
-  if (!boost::filesystem::exists(file_name))
+  if (!std::filesystem::exists(file_name))
   {
     RCLCPP_WARN_STREAM(LOGGER, "File not found: " << file_name);
     return false;
@@ -308,13 +306,13 @@ bool IMarkerRobotState::getFilePath(std::string& file_path, const std::string& f
                                     const std::string& subdirectory) const
 
 {
-  namespace fs = boost::filesystem;
+  namespace fs = std::filesystem;
 
   // Check that the directory exists, if not, create it
   fs::path rootPath = fs::path(package_path_);
   rootPath = rootPath / fs::path(subdirectory);
 
-  boost::system::error_code returnedError;
+  std::error_code returnedError;
   fs::create_directories(rootPath, returnedError);
 
   if (returnedError)
